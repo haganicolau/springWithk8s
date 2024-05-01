@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: newschedule-pod
+spec:
+  containers:
+    - name: java
+      image: newschedule:latest
+      ports:
+        - containerPort: 8081
+      resources:
+        limits:
+          cpu: "500m"
+          memory: "512Mi"
+        requests:
+          memory: "256Mi"
+      env:
+        - name: MYSQL_HOST
+          value: "180.16.240.3"
+        - name: MYSQL_PORT
+          value: "3306"
+        - name: MYSQL_DATABASE
+          value: "scheduled"
+        - name: MYSQL_USER
+          value: "user"
+        - name: MYSQL_PASSWORD
+          value: "pass"

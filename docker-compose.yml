@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    container_name: mysql-container
+    expose:
+      - '3306'
+    environment:
+      MYSQL_DATABASE: 'scheduled'
+      MYSQL_ROOT_PASSWORD: 'pass'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: 'pass'
+    volumes:
+      - ./.docker/my.cnf:/etc/mysql/my.cnf
+      #- ./data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+    networks:
+      vpcbr2:
+        ipv4_address: 180.16.240.3
+
+#  java:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    container_name: newschedule
+#    restart: always
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '0.5'
+#          memory: 512M
+#        reservations:
+#          memory: 256M
+#    networks:
+#      vpcbr2:
+#        ipv4_address: 180.16.240.4
+
+networks:
+  vpcbr2:
+    ipam:
+      driver: default
+      config:
+        - subnet: '180.16.240.1/12'
